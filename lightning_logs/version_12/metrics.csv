@@ -1,0 +1,2 @@
+epoch,step,val_loss,val_mean_accuracy,val_mean_iou
+0,12,0.43491309881210327,0.9992601871490479,0.4996300935745239
