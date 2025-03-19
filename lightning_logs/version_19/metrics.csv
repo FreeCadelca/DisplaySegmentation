@@ -1,0 +1,2 @@
+epoch,step,test_loss,test_mean_accuracy,test_mean_iou
+0,0,8.667169458931312e-05,1.0,1.0
