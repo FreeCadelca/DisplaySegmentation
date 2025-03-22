@@ -1,23 +1,27 @@
-import numpy as np
-import scipy.stats as stats
+import pprint
+import json
 
-# Данные
-weights = np.array([812.0, 786.7, 794.1, 791.6, 811.1, 797.4, 797.8, 800.8, 793.2])
-n = len(weights)  # Размер выборки
-df = n - 1  # Степени свободы
 
-# Выборочное стандартное отклонение
-s = np.std(weights, ddof=1)
-print(s)
-# Квантили хи-квадрат распределения для 90% доверительного интервала
-alpha = 0.10
-chi2_lower = stats.chi2.ppf(alpha / 2, df)
-chi2_upper = stats.chi2.ppf(1 - alpha / 2, df)
+def limit_items(data, max_items=10):
+    if isinstance(data, list):
+        return [limit_items(item, max_items) for item in data[:max_items]]
+    elif isinstance(data, dict):
+        return {key: limit_items(value, max_items) for key, value in data.items()}
+    else:
+        return data
 
-# Доверительный интервал для σ
-sigma_lower = np.sqrt((df * s**2) / chi2_upper)
-sigma_upper = np.sqrt((df * s**2) / chi2_lower)
+def read_and_print_json(file_path, max_items=10):
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+            limited_data = limit_items(data, max_items)
+            pprint.pprint(limited_data, sort_dicts=False)
+    except FileNotFoundError:
+        print("Файл не найден.")
+    except json.JSONDecodeError:
+        print("Ошибка декодирования JSON.")
 
-print(sigma_lower, sigma_upper)
 
-print(chi2_lower, chi2_upper)
+if __name__ == "__main__":
+    file_path = "Screen-segmentation-2/train/_annotations.coco.json"  # Укажите путь к вашему JSON-файлу
+    read_and_print_json(file_path, max_items=20)
